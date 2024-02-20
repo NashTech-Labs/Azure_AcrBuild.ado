@@ -1,0 +1,48 @@
+parameters:
+
+- name: serviceConnection
+  type: string
+
+- name: imageRepository
+  type: string
+
+- name: dockerfilePath
+  type: string
+  default: 'Dockerfile'
+
+- name: tags
+  type: string
+  default: "latest,template"
+
+- name: dockerBuildArgs
+  type: string
+  default: ' '
+
+- name: buildContext
+  type: string
+  default: "."
+
+- name: addPipelineData
+  type: boolean
+  default: true
+
+- name: addBaseImageData
+  type: boolean
+  default: true
+
+steps:
+
+
+- task: Docker@2
+  inputs:
+    containerRegistry: '${{parameters.serviceConnection}}'
+    repository: ${{ parameters.imageRepository }}
+    command: 'build'
+    Dockerfile: '${{parameters.dockerfilePath}}'
+    buildContext: '${{parameters.buildContext}}'
+    tags: ${{parameters.tags}}
+    arguments: ${{parameters.dockerBuildArgs}}
+    addPipelineData: ${{parameters.addPipelineData}}
+    addBaseImageData: ${{parameters.addBaseImageData}}
+  name: DockerBuildImageAcr
+  displayName: "Docker Image Build"
